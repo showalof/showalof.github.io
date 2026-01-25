@@ -2,145 +2,245 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>ข้อความลับเฉพาะคุณ</title>
+  <title>Private Letter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500&family=Charmonman:wght@400;700&family=Cormorant+Garamond:wght@400;600&display=swap');
 
     body {
-      font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at top, #2a2a55, #0f0f1a);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
+      font-family: 'Anuphan', sans-serif;
+      background: #f3f1ec;
+      color: #2b2b2b;
+    }
+
+    header {
+      padding: 28px 16px;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 600;
+      background: linear-gradient(180deg, #fdfbf7, #f6f2ea);
+      border-bottom: 1px solid #e5e0d8;
+      letter-spacing: 0.04em;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 32px 16px;
+    }
+
+    /* ===== CODE PAGE ===== */
+    .code-page { text-align: center; }
+
+    .code-page input {
+      padding: 14px;
+      width: 100%;
+      max-width: 320px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 16px;
+    }
+
+    .code-page button {
+      padding: 12px 28px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background: #2b2b2b;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* ===== ENVELOPE PAGE ===== */
+    .envelope-page { display:none; text-align:center; }
+
+    .envelope {
+      width: 280px;
+      height: 180px;
+      margin: 80px auto;
+      position: relative;
+      background: linear-gradient(180deg,#fffdf8,#f1ece4);
+      border: 1px solid #d6d0c6;
+      border-radius: 8px;
+      box-shadow: 0 18px 36px rgba(0,0,0,0.18);
+      cursor: pointer;
+      transition: transform .4s ease;
       overflow: hidden;
     }
 
-    .card {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      padding: 32px;
-      border-radius: 20px;
-      width: 340px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      animation: fadeUp 0.8s ease;
+    .envelope:hover { transform: translateY(-8px); }
+
+    .flap {
+      position:absolute;
+      top:0; left:0; right:0;
+      height:55%;
+      background: linear-gradient(180deg,#f6f2ea,#e7e2d9);
+      clip-path: polygon(0 0,100% 0,50% 70%);
+      transform-origin: top center;
+      transition: transform .8s ease;
+      z-index:3;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .envelope.open .flap { transform: rotateX(180deg); }
+
+    .letter-inside {
+      position:absolute;
+      left:8%; right:8%; bottom:6%;
+      height:70%;
+      background:#fdfbf7;
+      border-radius:4px;
+      box-shadow:0 6px 12px rgba(0,0,0,0.12);
+      transform: translateY(40%);
+      transition: transform .8s ease;
+      z-index:1;
     }
 
-    h1 {
-      font-size: 22px;
-      margin-bottom: 20px;
-      font-weight: 500;
+    .envelope.open .letter-inside { transform: translateY(-5%); }
+
+    .sender {
+      position:absolute;
+      bottom:14px;
+      right:18px;
+      font-family:'Charmonman', cursive;
+      font-size:22px;
+      opacity:0;
+      transition: opacity .3s ease;
+      z-index:4;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      margin-bottom: 18px;
-      font-size: 15px;
-      outline: none;
+    .envelope:hover .sender { opacity:1; }
+
+    /* ===== LETTER PAGE ===== */
+    .letter-page { display:none; }
+
+    .letter-paper {
+      background: #fdfbf7;
+      padding: 44px 38px;
+      border-radius: 14px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      font-family: 'Cormorant Garamond', serif;
     }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #7c7cff, #9f9fff);
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(124,124,255,0.4);
-    }
-
-    .error {
-      color: #ff9a9a;
-      margin-top: 12px;
-      display: none;
-      font-size: 14px;
-    }
-
-    .message-page {
-      display: none;
-      text-align: center;
-    }
-
-    .message-box {
-      font-size: 16px;
-      line-height: 1.8;
+    .letter-text {
       white-space: pre-wrap;
-      min-height: 120px;
-      animation: glow 2s ease-in-out infinite alternate;
+      line-height: 2;
+      font-size: 21px;
+      min-height: 220px;
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 6px rgba(255,255,255,0.2); }
-      to { text-shadow: 0 0 14px rgba(160,160,255,0.8); }
+    .signature {
+      margin-top: 56px;
+      text-align: right;
+      font-size: 28px;
+      font-family: 'Charmonman', cursive;
+      transform: rotate(-3deg);
+      opacity:0;
+      transition: opacity 1.5s ease;
+    }
+
+    .signature.show { opacity:1; }
+
+    .error { color:#b00020; margin-top:12px; }
+
+    @media (max-width:480px) {
+      header{font-size:26px}
+      .letter-paper{padding:30px 24px}
+      .letter-text{font-size:18px}
+      .signature{font-size:22px}
     }
   </style>
 </head>
 <body>
-  <!-- หน้าใส่รหัส -->
-  <div class="card" id="loginPage">
-    <h1>ใส่รหัสของคุณ</h1>
-    <input type="text" id="codeInput" placeholder="รหัสเฉพาะบุคคล" />
-    <button onclick="checkCode()">ยืนยัน</button>
-    <div class="error" id="errorBox">รหัสไม่ถูกต้อง</div>
+
+<header>Private Letter</header>
+
+<div class="container">
+
+  <!-- CODE PAGE -->
+  <div id="codePage" class="code-page">
+    <p>Enter your personal code</p>
+    <input id="codeInput" type="text" placeholder="Your code" />
+    <br />
+    <button onclick="checkCode()">Confirm</button>
+    <div id="errorMsg" class="error"></div>
   </div>
 
-  <!-- หน้าแสดงข้อความ -->
-  <div class="card message-page" id="messagePage">
-    <h1 id="ownerName"></h1>
-    <div class="message-box" id="typedMessage"></div>
+  <!-- ENVELOPE PAGE -->
+  <div id="envelopePage" class="envelope-page">
+    <div id="envelope" class="envelope" onclick="openEnvelope()">
+      <div class="flap"></div>
+      <div class="letter-inside"></div>
+      <div id="senderName" class="sender"></div>
+    </div>
+    <p>Click the envelope</p>
   </div>
 
-  <script>
-    const messages = {
-      "A123": { name: "Dear .... Pakin", text: "นี่คือข้อความที่ตั้งใจทิ้งไว้ให้คุณ ขอบคุณที่เข้ามาอ่านนะ คุณเก่งมาก อย่าลืมเชื่อมั่นในตัวเอง ถ้าวันไหนเหนื่อย อย่าลืมพักบ้างนะ" },
-      "B456": { name: "ถึงนนท์", text: "คุณเก่งมาก อย่าลืมเชื่อมั่นในตัวเอง" },
-      "C789": { name: "ถึงมิว", text: "ถ้าวันไหนเหนื่อย อย่าลืมพักบ้างนะ" }
-    };
+  <!-- LETTER PAGE -->
+  <div id="letterPage" class="letter-page">
+    <div class="letter-paper">
+      <h2 id="letterTitle"></h2>
+      <div id="letterText" class="letter-text"></div>
+      <div id="letterSign" class="signature"></div>
+    </div>
+  </div>
 
-    function checkCode() {
-      const input = document.getElementById('codeInput').value.trim();
-      const errorBox = document.getElementById('errorBox');
+</div>
 
-      if (messages[input]) {
-        document.getElementById('loginPage').style.display = 'none';
-        document.getElementById('messagePage').style.display = 'block';
-        document.getElementById('ownerName').textContent = messages[input].name;
-        typeMessage(messages[input].text);
-      } else {
-        errorBox.style.display = 'block';
-      }
+<script>
+  const letters = {
+    "A123": {
+      name: "My Dear PAKIN...",
+      sender: "SHO",
+      text: `NIGGA.`,
+      sign: "— SHO"
+    },
+    "B456": {
+      name: "Dear ",
+      sender: "SHO",
+      text: `Some feelings don’t fade.\n\nThey just learn how to stay quiet.`,
+      sign: "— SHO"
+    }
+  };
+
+  let currentLetter = null;
+
+  function checkCode(){
+    const code = document.getElementById('codeInput').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    errorMsg.textContent = "";
+
+    if(!letters[code]){
+      errorMsg.textContent = "Invalid code";
+      return;
     }
 
-    function typeMessage(text) {
-      const box = document.getElementById('typedMessage');
-      box.textContent = '';
-      let i = 0;
-      const speed = 50; // ความเร็วพิมพ์ (ms)
+    currentLetter = letters[code];
+    document.getElementById('codePage').style.display = 'none';
+    document.getElementById('envelopePage').style.display = 'block';
+    document.getElementById('senderName').textContent = currentLetter.sender;
+  }
 
-      const interval = setInterval(() => {
-        box.textContent += text[i];
-        i++;
-        if (i >= text.length) clearInterval(interval);
-      }, speed);
-    }
-  </script>
+  function openEnvelope(){
+    const env = document.getElementById('envelope');
+    env.classList.add('open');
+    setTimeout(openLetter, 900);
+  }
+
+  function openLetter(){
+    document.getElementById('envelopePage').style.display = 'none';
+    document.getElementById('letterPage').style.display = 'block';
+    document.getElementById('letterTitle').textContent = currentLetter.name;
+    document.getElementById('letterText').textContent = currentLetter.text;
+    const sign = document.getElementById('letterSign');
+    sign.textContent = currentLetter.sign;
+    setTimeout(() => sign.classList.add('show'), 800);
+    window.scrollTo(0,0);
+  }
+</script>
+
 </body>
 </html>
