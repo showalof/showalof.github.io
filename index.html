@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>ข้อความลับเฉพาะคุณ</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap');
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: radial-gradient(circle at top, #2a2a55, #0f0f1a);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      padding: 32px;
+      border-radius: 20px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      animation: fadeUp 0.8s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 18px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #7c7cff, #9f9fff);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(124,124,255,0.4);
+    }
+
+    .error {
+      color: #ff9a9a;
+      margin-top: 12px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .message-page {
+      display: none;
+      text-align: center;
+    }
+
+    .message-box {
+      font-size: 16px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      min-height: 120px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 6px rgba(255,255,255,0.2); }
+      to { text-shadow: 0 0 14px rgba(160,160,255,0.8); }
+    }
+  </style>
+</head>
+<body>
+  <!-- หน้าใส่รหัส -->
+  <div class="card" id="loginPage">
+    <h1>ใส่รหัสของคุณ</h1>
+    <input type="text" id="codeInput" placeholder="รหัสเฉพาะบุคคล" />
+    <button onclick="checkCode()">ยืนยัน</button>
+    <div class="error" id="errorBox">รหัสไม่ถูกต้อง</div>
+  </div>
+
+  <!-- หน้าแสดงข้อความ -->
+  <div class="card message-page" id="messagePage">
+    <h1 id="ownerName"></h1>
+    <div class="message-box" id="typedMessage"></div>
+  </div>
+
+  <script>
+    const messages = {
+      "A123": { name: "Dear .... Pakin", text: "นี่คือข้อความที่ตั้งใจทิ้งไว้ให้คุณ ขอบคุณที่เข้ามาอ่านนะ คุณเก่งมาก อย่าลืมเชื่อมั่นในตัวเอง ถ้าวันไหนเหนื่อย อย่าลืมพักบ้างนะ" },
+      "B456": { name: "ถึงนนท์", text: "คุณเก่งมาก อย่าลืมเชื่อมั่นในตัวเอง" },
+      "C789": { name: "ถึงมิว", text: "ถ้าวันไหนเหนื่อย อย่าลืมพักบ้างนะ" }
+    };
+
+    function checkCode() {
+      const input = document.getElementById('codeInput').value.trim();
+      const errorBox = document.getElementById('errorBox');
+
+      if (messages[input]) {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('messagePage').style.display = 'block';
+        document.getElementById('ownerName').textContent = messages[input].name;
+        typeMessage(messages[input].text);
+      } else {
+        errorBox.style.display = 'block';
+      }
+    }
+
+    function typeMessage(text) {
+      const box = document.getElementById('typedMessage');
+      box.textContent = '';
+      let i = 0;
+      const speed = 50; // ความเร็วพิมพ์ (ms)
+
+      const interval = setInterval(() => {
+        box.textContent += text[i];
+        i++;
+        if (i >= text.length) clearInterval(interval);
+      }, speed);
+    }
+  </script>
+</body>
+</html>
